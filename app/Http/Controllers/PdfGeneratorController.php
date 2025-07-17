@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class PdfGeneratorController extends Controller
 {
@@ -18,74 +19,74 @@ class PdfGeneratorController extends Controller
     }
 
     /**
-     * สร้างไฟล์ PDF โดยสร้าง HTML ทั้งหมดใน Controller โดยตรง
+     * สร้างและส่งออกไฟล์ PDF โดยใช้ disk 'uploads'
      */
     public function exportPdf(Request $request)
     {
-        // 1. ตรวจสอบและรับข้อมูล HTML
+        // หากเจอปัญหา Debugbar รบกวนการสร้าง PDF ในอนาคต สามารถเปิดใช้งานบรรทัดนี้ได้
+        // \Debugbar::disable();
+
         $request->validate(['html_content' => 'required|string']);
         $htmlContent = $request->input('html_content');
 
-        // 2. อ่านไฟล์ CSS สำหรับ PDF
+        // --- ส่วนของการสร้าง HTML และ CSS (เหมือนเดิม) ---
         $pdfCssPath = public_path('css/pdf.css');
         $finalCss = '';
         if (File::exists($pdfCssPath)) {
             $cssContent = File::get($pdfCssPath);
-            // แปลง path ของฟอนต์ให้เป็น Absolute Path ที่ Puppeteer เข้าใจ
             $fontPath = public_path('fonts/THSarabunNew.ttf');
             $fontUrlPath = 'file:///' . str_replace('\\', '/', $fontPath);
             $finalCss = str_replace("url('/fonts/THSarabunNew.ttf')", "url('{$fontUrlPath}')", $cssContent);
         }
 
-        // --- ส่วนที่แก้ไข: สร้าง HTML ทั้งหมดขึ้นมาเป็น String โดยตรง ---
-        // วิธีนี้จะเหมือนกับการใช้ file_get_contents แล้วนำมาต่อกัน ทำให้มั่นใจได้ 100%
         $fullHtml = "<!DOCTYPE html>
 <html lang='th'>
-<head>
-    <meta charset='UTF-8'>
-    <title>Document</title>
-    <style>
-        {$finalCss}
-    </style>
-</head>
-<body>
-    {$htmlContent}
-</body>
+<head><meta charset='UTF-8'><title>Document</title><style>{$finalCss}</style></head>
+<body>{$htmlContent}</body>
 </html>";
-        // --- จบส่วนที่แก้ไข ---
 
-        // 5. สร้างชื่อและ path ของไฟล์ชั่วคราว
-        $uniqueId = Str::random(16);
-        $tempHtmlFileName = "{$uniqueId}.html";
-        $outputPdfFileName = "document_{$uniqueId}.pdf";
-        $tempHtmlPath = storage_path("app/temp/{$tempHtmlFileName}");
-        $outputPdfPath = storage_path("app/temp/{$outputPdfFileName}");
+        // --- ส่วนที่แก้ไข: ตั้งชื่อไฟล์จากวันที่และเวลา ---
+
+        $diskName = 'upload';
+        
+        // 2. สร้างชื่อไฟล์จากวันที่และเวลาปัจจุบัน (เช่น 2025-07-18_06-34-00)
+        $timestamp = Carbon::now()->format('Y-m-d_H-i-s');
+        $tempHtmlFileName = "temp_{$timestamp}.html";
+        $outputPdfFileName = "document_{$timestamp}.pdf"; // <-- ชื่อไฟล์ PDF ใหม่
+
+        // สร้าง Path ของไฟล์โดยอิงจาก disk 'uploads'
+        $tempHtmlPath = Storage::disk($diskName)->path($tempHtmlFileName);
+        $outputPdfPath = Storage::disk($diskName)->path($outputPdfFileName);
 
         try {
-            // 6. บันทึกไฟล์ HTML ที่สร้างขึ้นลงไฟล์ชั่วคราว
-            Storage::disk('temp')->put($tempHtmlFileName, $fullHtml);
+            // บันทึกไฟล์ HTML ลงใน disk 'uploads'
+            Storage::disk($diskName)->put($tempHtmlFileName, $fullHtml);
 
-            // 7. รันคำสั่งเพื่อสร้าง PDF
+            // --- ส่วนของการรันคำสั่ง Node.js (เหมือนเดิม) ---
             $nodeScriptPath = base_path('generate-pdf.js');
-            // $nodeExecutable = '"C:\Program Files\nodejs\node.exe"'; // อาจต้องเปลี่ยนตาม OS
-            $nodeExecutable = "node";
-            $command = "{$nodeExecutable} {$nodeScriptPath} \"{$tempHtmlPath}\" \"{$outputPdfPath}\"";
-            $output = shell_exec($command);
+            $nodeExecutable = 'node';
 
-            // 8. ตรวจสอบผลลัพธ์
-            if (!Storage::disk('temp')->exists($outputPdfFileName)) {
-                throw new \Exception('Node.js script failed to create PDF file. Output: ' . $output);
+            $safeTempHtmlPath = escapeshellarg($tempHtmlPath);
+            $safeOutputPdfPath = escapeshellarg($outputPdfPath);
+
+            $command = "{$nodeExecutable} " . escapeshellarg($nodeScriptPath) . " {$safeTempHtmlPath} {$safeOutputPdfPath} 2>&1";
+            
+            $commandOutput = shell_exec($command);
+
+            // ตรวจสอบไฟล์ใน disk 'uploads'
+            if (!Storage::disk($diskName)->exists($outputPdfFileName) || !empty($commandOutput)) {
+                throw new \Exception('Node.js script failed. Output: ' . ($commandOutput ?: 'No output, but file was not created.'));
             }
 
-            // 9. ส่งไฟล์ PDF กลับไป
-            $pdfContent = Storage::disk('temp')->get($outputPdfFileName);
+            // อ่านไฟล์ PDF จาก disk 'uploads'
+            $pdfContent = Storage::disk($diskName)->get($outputPdfFileName);
             return response($pdfContent)->header('Content-Type', 'application/pdf');
 
         } catch (\Exception $e) {
             return response("เกิดข้อผิดพลาดในการสร้าง PDF: " . $e->getMessage(), 500);
         } finally {
-            // 10. ลบไฟล์ชั่วคราว
-            Storage::disk('temp')->delete([$tempHtmlFileName, $outputPdfFileName]);
+            // ลบเฉพาะไฟล์ HTML ชั่วคราว และเก็บไฟล์ PDF ที่สร้างเสร็จแล้วไว้
+            Storage::disk($diskName)->delete($tempHtmlFileName);
         }
     }
 

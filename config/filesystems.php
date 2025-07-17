@@ -58,6 +58,11 @@ return [
             'root' => storage_path('app/temp'),
             'throw' => false,
         ],
+        'upload' => [
+            'driver' => 'local',
+            'root' => public_path('upload'), // previously storage_path();
+            'url' => env('APP_URL'). '/upload'
+        ],
 
     ],
 

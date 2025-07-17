@@ -10,7 +10,7 @@ body {
     margin: 0;
     font-family: 'THSarabunNew', sans-serif;
     font-size: 16pt;
-    line-height: 0.5; /* <-- แก้ไขแล้ว */
+    line-height: 1.2; /* <-- แก้ไขแล้ว */
 }
 
 /* --- สไตล์สำหรับ Toolbar --- */
