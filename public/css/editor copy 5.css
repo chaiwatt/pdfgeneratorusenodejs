@@ -1,0 +1,109 @@
+/* public/css/editor.css */
+@font-face {
+    font-family: 'THSarabunNew';
+    src: url('/fonts/THSarabunNew.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    background-color: #f0f2f5;
+    margin: 0;
+    font-family: 'THSarabunNew', sans-serif;
+    font-size: 16pt;
+    line-height: 1.4;
+}
+
+/* --- สไตล์สำหรับ Toolbar --- */
+#toolbar {
+    background-color: #ffffff;
+    padding: 8px 16px;
+    border-bottom: 1px solid #e0e0e0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.toolbar-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.toolbar-button {
+    background-color: transparent;
+    border: none;
+    padding: 6px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px; /* ขนาดไอคอน */
+    color: #333;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.toolbar-button:hover {
+    background-color: #f0f0f0;
+}
+
+.toolbar-button:disabled {
+    color: #ccc;
+    cursor: not-allowed;
+}
+
+/* --- ส่วนที่เพิ่มเข้ามาใหม่: สไตล์สำหรับ Dropdown --- */
+.toolbar-select {
+    font-family: 'THSarabunNew', sans-serif;
+    font-size: 14pt;
+    padding: 2px 4px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+}
+/* --- จบส่วนที่เพิ่มเข้ามาใหม่ --- */
+
+.toolbar-separator {
+    width: 1px;
+    height: 20px;
+    background-color: #e0e0e0;
+    margin: 0 8px;
+}
+
+#loading-indicator {
+    margin-left: 8px;
+    font-size: 16px;
+    color: #007bff;
+}
+/* --- จบสไตล์สำหรับ Toolbar --- */
+
+
+#editor-container {
+    padding: 2rem 0;
+}
+
+#document-editor {
+    /* No size needed, controlled by .page */
+}
+
+.page {
+    width: 21cm;
+    height: 29.7cm;
+    padding: 2cm;
+    background-color: white;
+    margin: 1rem auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+    overflow: hidden;
+    outline: none;
+}
+
+.page table, .page th, .page td {
+    border: 1px solid #ccc;
+}
+.page table {
+    border-collapse: collapse;
+    width: 100%;
+}

@@ -1,0 +1,295 @@
+/* public/css/editor.css */
+@font-face {
+    font-family: 'THSarabunNew';
+    src: url('/fonts/THSarabunNew.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    background-color: #f0f2f5;
+    margin: 0;
+    font-family: 'THSarabunNew', sans-serif;
+    font-size: 16pt;
+    line-height: 1.4;
+}
+
+/* --- สไตล์สำหรับ Toolbar --- */
+#toolbar {
+    background-color: #ffffff;
+    padding: 8px 16px;
+    border-bottom: 1px solid #e0e0e0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.toolbar-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.toolbar-button {
+    background-color: transparent;
+    border: none;
+    padding: 6px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.toolbar-button:hover {
+    background-color: #f0f0f0;
+}
+
+.toolbar-button:disabled {
+    color: #ccc;
+    cursor: not-allowed;
+}
+
+.toolbar-select {
+    font-family: 'THSarabunNew', sans-serif;
+    font-size: 14pt;
+    padding: 2px 4px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+}
+
+.toolbar-separator {
+    width: 1px;
+    height: 20px;
+    background-color: #e0e0e0;
+    margin: 0 8px;
+}
+
+#loading-indicator {
+    margin-left: 8px;
+    font-size: 16px;
+    color: #007bff;
+}
+
+/* --- สไตล์สำหรับรูปภาพที่ปรับขนาดได้ --- */
+.resizable-image-wrapper {
+    position: relative;
+    display: inline-block;
+    vertical-align: bottom;
+    line-height: 0;
+}
+
+.resizable-image-wrapper.selected {
+    outline: 2px dashed #007bff;
+}
+
+.resizable-image-wrapper img {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.resizer {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: #007bff;
+    border: 2px solid #fff;
+    border-radius: 2px;
+    right: -7px;
+    bottom: -7px;
+    cursor: nwse-resize;
+    display: none;
+}
+
+.resizable-image-wrapper.selected .resizer {
+    display: block;
+}
+
+/* --- ส่วนที่แก้ไข: ปรับปรุงสไตล์สำหรับ Modal และตาราง --- */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    opacity: 0;
+    animation: fadeIn 0.3s forwards;
+}
+
+.modal {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.25);
+    width: 90%;
+    max-width: 380px;
+    display: flex;
+    flex-direction: column;
+    transform: translateY(-20px);
+    opacity: 0;
+    animation: slideDown 0.4s 0.1s forwards cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
+@keyframes slideDown {
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-header {
+    padding: 16px 24px;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 18pt;
+    color: #333;
+}
+
+.modal-close-btn {
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: #aaa;
+    line-height: 1;
+    transition: color 0.2s;
+}
+.modal-close-btn:hover {
+    color: #333;
+}
+
+.modal-body {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.form-group label {
+    font-size: 14pt;
+    color: #555;
+    display: flex;
+    align-items: center;
+}
+
+.form-group input[type="number"] {
+    width: 80px;
+    padding: 6px 10px;
+    font-size: 14pt;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: center;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input[type="number"]:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+}
+
+.form-group input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+}
+
+.modal-footer {
+    padding: 16px 24px;
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.modal-button {
+    padding: 8px 20px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    font-size: 14pt;
+    font-family: 'THSarabunNew', sans-serif;
+    transition: all 0.2s ease-in-out;
+}
+
+.modal-button.primary {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+.modal-button.primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.modal-button:not(.primary):hover {
+    background-color: #e2e6ea;
+    border-color: #dae0e5;
+}
+/* --- จบส่วนที่แก้ไข --- */
+
+
+#editor-container {
+    padding: 2rem 0;
+}
+
+#document-editor {
+    /* No size needed, controlled by .page */
+}
+
+.page {
+    width: 21cm;
+    height: 29.7cm;
+    padding: 2cm;
+    background-color: white;
+    margin: 1rem auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+    overflow: hidden;
+    outline: none;
+}
+
+/* --- สไตล์ตาราง --- */
+.page table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.page table.table-bordered,
+.page table.table-bordered th,
+.page table.table-bordered td {
+    border: 1px solid #ccc;
+}
+
+.page table th,
+.page table td {
+    padding: 8px;
+    min-width: 20px;
+}

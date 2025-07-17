@@ -1,0 +1,82 @@
+/* public/css/editor.css */
+@font-face {
+    font-family: 'THSarabunNew';
+    /* Path ต้องอ้างอิงจาก public root */
+    src: url('/fonts/Sarabun-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    background-color: #f0f2f5;
+    margin: 0;
+    font-family: 'THSarabunNew', sans-serif;
+    font-size: 16pt; /* ตั้งค่าขนาดฟอนต์พื้นฐาน */
+}
+
+#menubar {
+    background-color: #fff;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+#export-pdf-button {
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: bold;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#export-pdf-button:hover {
+    background-color: #0056b3;
+}
+
+#export-pdf-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+#editor-container {
+    padding: 2rem 0;
+}
+
+#document-editor {
+    /* ไม่ต้องกำหนดขนาด เพราะขนาดจะถูกควบคุมโดย .page ภายใน */
+}
+
+.page {
+    /* ขนาดกระดาษ A4 */
+    width: 21cm;
+    height: 29.7cm;
+
+    /* ระยะขอบกระดาษ */
+    padding: 2cm;
+
+    /* สไตล์ */
+    background-color: white;
+    margin: 1rem auto; /* เว้นระยะห่างและจัดกลาง */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+    box-sizing: border-box; /* สำคัญมาก! ทำให้ padding ไม่ไปบวกเพิ่มกับ width/height */
+    overflow: hidden; /* สำคัญมาก! สำหรับการตรวจจับเนื้อหาที่ล้น */
+    outline: none; /* เอาเส้นกรอบสีฟ้าตอน focus ออก */
+}
+
+/* ทำให้ตารางมีเส้นขอบเพื่อการมองเห็น */
+.page table, .page th, .page td {
+    border: 1px solid #ccc;
+}
+.page table {
+    border-collapse: collapse;
+    width: 100%;
+}

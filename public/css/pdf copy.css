@@ -1,0 +1,55 @@
+/* ================================================================ */
+/* == ไฟล์นี้สร้างขึ้นใหม่สำหรับใช้สร้าง PDF โดยเฉพาะ == */
+/* ================================================================ */
+/* public/css/pdf.css */
+
+@font-face {
+    font-family: 'THSarabunNew';
+    /* Controller จะทำการเปลี่ยน path นี้เป็น path เต็มบน server ให้เอง */
+    src: url('/fonts/THSarabunNew.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    margin: 0;
+    background-color: #ffffff; /* กำหนดให้พื้นหลัง PDF เป็นสีขาวเสมอ */
+    font-family: 'THSarabunNew', sans-serif;
+    /* --- ส่วนที่แก้ไข: ปรับให้ตรงกับ editor.css --- */
+    font-size: 16pt;   /* ลดขนาดฟอนต์ลง */
+    line-height: 1.4;    /* ลดระยะห่างระหว่างบรรทัด */
+    /* --- จบส่วนที่แก้ไข --- */
+    -webkit-print-color-adjust: exact; /* คำสั่งสำคัญสำหรับ Puppeteer */
+    print-color-adjust: exact;
+}
+
+.page {
+    /* ขนาดกระดาษ A4 */
+    width: 21cm;
+    height: 29.7cm;
+
+    /* ระยะขอบของเนื้อหาในกระดาษ */
+    padding: 2cm;
+
+    /* สไตล์พื้นฐานที่จำเป็น */
+    background-color: white;
+    box-sizing: border-box;
+    overflow: hidden;
+
+    /* --- ไม่มีการกำหนดเงา (box-shadow) หรือระยะขอบนอก (margin) --- */
+}
+
+/* กำหนดสไตล์พื้นฐานให้ตาราง */
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table, th, td {
+    border: 1px solid #ccc;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+}

@@ -1,0 +1,50 @@
+/* ================================================================ */
+/* == ไฟล์นี้สร้างขึ้นใหม่สำหรับใช้สร้าง PDF โดยเฉพาะ == */
+/* ================================================================ */
+/* public/css/pdf.css */
+
+@font-face {
+    font-family: 'THSarabunNew';
+    /* Controller จะทำการเปลี่ยน path นี้เป็น path เต็มบน server ให้เอง */
+    src: url('/fonts/THSarabunNew.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    margin: 0;
+    background-color: #ffffff;
+    font-family: 'THSarabunNew', sans-serif;
+    font-size: 16pt;
+    line-height: 1.4;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+
+.page {
+    width: 21cm;
+    height: 29.7cm;
+    padding: 2cm;
+    background-color: white;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+/* --- ส่วนที่แก้ไข: ปรับปรุงสไตล์ตารางให้ใช้คลาส --- */
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+/* กำหนดเส้นขอบเมื่อมีคลาส .table-bordered เท่านั้น */
+table.table-bordered,
+table.table-bordered th,
+table.table-bordered td {
+    border: 1px solid #ccc;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+}
+/* --- จบส่วนที่แก้ไข --- */
